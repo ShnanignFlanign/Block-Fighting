@@ -20,10 +20,29 @@ body {
     justify-content: space-around;
 }
 
+#reverseCharacters {
+    background: #b7b7b7;
+    color: #333;
+    border-radius: 5px;
+    height: 200px;
+    width: 550px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: row-reverse;
+}
+
 #buttonContainer {
     display: flex; 
     padding: 15px;
     justify-content: space-between;
+}
+
+#reverseContainer {
+    display: flex; 
+    padding: 15px;
+    justify-content: space-between;
+    flex-direction: row-reverse;
 }
 
 #selectPlayer {
@@ -33,9 +52,25 @@ body {
 }
 
 img {
-    width: 3rem;
+    width: 3.5rem;
 }
 
 .hidden {
     display: none;
+}
+
+.fightTime {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #b7b7b7;
+    color: #333;
+    border-radius: 5px;
+}
+
+.moveList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
 }

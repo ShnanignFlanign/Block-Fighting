@@ -18,24 +18,35 @@
     </header>
     <main>
       <div id="characterContainer">
-        <div class="character" id="boxBoi">
+        <div class="character" data-player="" data-chosen="false" id="boxBoi">
           <img id="boxBoiGif" src="spritesheets/boxBoiStand.gif">
-          <div id="boxBoiHealth"></div>
         </div>
-        <div class="character" id="devilDude">
+        <div class="character" data-player="" data-chosen="false" id="devilDude">
           <img id="devilDudeGif" src="spritesheets/devilDude-Stand.gif">
-          <div id="devilDudeHealth"></div>
         </div>
-        <div class="character" id="flubber">
+        <div class="character" data-player="" data-chosen="false" id="flubber">
           <img id="flubberGif" src="spritesheets/flubber-Stand.gif">
-          <div id="flubberHealth"></div>
         </div>
       </div>
     
       <div id="buttonContainer">
-        <button class="hidden" data-name="boxBoi" id="boxBoiButton">Box Boi</button>
-        <button class="hidden" data-name="devilDude" id="devilDudeButton">Devil Dude</button>
-        <button class="hidden" data-name="flubber" id="flubberButton">Flubber</button>
+        <button class="hidden"  data-name="boxBoi" id="boxBoiButton">Box Boi</button>
+        <button class="hidden"  data-name="devilDude" id="devilDudeButton">Devil Dude</button>
+        <button class="hidden"  data-name="flubber" id="flubberButton">Flubber</button>
+      </div>
+      <div class="hidden" id="fightButtons">
+        <div id="p1Attacks">
+          <h3 id="p1Health">Health: </h3>
+          <button id="p1Safe">Low Damage</button>
+          <button id="p1Moderate">Medium Damage</button>
+          <button id="p1Spicy">Feeling Spicy</button>
+        </div>
+        <div id="p2Attacks">
+          <h3 id="p2Health">Health: </h3>
+          <button id="p2Safe">Low Damage</button>
+          <button id="p2Moderate">Medium Damage</button>
+          <button id="p2Spicy">Feeling Spicy</button>
+        </div>
       </div>
     </main>
 	<script src="app.js"></script>
