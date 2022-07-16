@@ -20,7 +20,13 @@ body {
     justify-content: space-around;
 }
 
-#buttonContainer, #selectPlayer {
+#buttonContainer {
+    display: flex; 
+    padding: 15px;
+    justify-content: space-between;
+}
+
+#selectPlayer {
     display: flex; 
     padding: 15px;
     justify-content: space-between;
