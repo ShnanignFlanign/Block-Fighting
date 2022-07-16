@@ -1,3 +1,35 @@
 body {
-    background-color:aquamarine;
+    background-color:#333;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    text-align: center;
+}
+
+#characterContainer {
+    background: #b7b7b7;
+    color: #333;
+    border-radius: 5px;
+    height: 200px;
+    width: 550px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#buttonContainer, #selectPlayer {
+    display: flex; 
+    padding: 15px;
+    justify-content: space-between;
+}
+
+img {
+    width: 3rem;
+}
+
+.hidden {
+    display: none;
 }

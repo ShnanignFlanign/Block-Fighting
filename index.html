@@ -8,6 +8,36 @@
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
+    <header>
+      <h1>Block-Fighting!</h1>
+      <h2>Choose your Character</h2>
+      <div id="selectPlayer">
+        <button id="p1" data-toggle="off">Player 1</button>
+        <button id="p2" data-toggle="off">Player 2</button>
+      </div>
+    </header>
+    <main>
+      <div id="characterContainer">
+        <div class="character" id="boxBoi">
+          <img id="boxBoiGif" src="spritesheets/boxBoiStand.gif">
+          <div id="boxBoiHealth"></div>
+        </div>
+        <div class="character" id="devilDude">
+          <img id="devilDudeGif" src="spritesheets/devilDude-Stand.gif">
+          <div id="devilDudeHealth"></div>
+        </div>
+        <div class="character" id="flubber">
+          <img id="flubberGif" src="spritesheets/flubber-Stand.gif">
+          <div id="flubberHealth"></div>
+        </div>
+      </div>
+    
+      <div id="buttonContainer">
+        <button id="boxBoiButton" disabled>Box Boi</button>
+        <button id="devilDudeButton" disabled>Devil Dude</button>
+        <button id="flubberButton" disabled>Flubber</button>
+      </div>
+    </main>
 	<script src="app.js"></script>
   </body>
 </html>
