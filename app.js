@@ -14,10 +14,18 @@ class Character {
         this.health = 100;
     }
     loseHealth (value) {
-        this.health - value;
+        this.health = this.health - value;
     }
-    attack (opponent, value) {
-        opponent.loseHealth(value)
+    damageDealer (probability, damage, opponent) {
+        let temp = Math.floor(Math.random() * 1000)
+        console.log(temp, probability)
+        if(temp%probability === 0){
+            opponent.loseHealth(damage)
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     //this is rough draft, might need to add more stuff
 }
@@ -35,13 +43,10 @@ const p2Button = document.querySelector('#p2')
 const characterContainer = document.querySelector("#characterContainer")
 const boxBoi = document.querySelector('#boxBoi')
 const boxBoiGif = document.querySelector('#boxBoiGif');
-const boxBoiHealth = document.querySelector('#boxBoiHealth');
-const devilDude = document.querySelector('#devilDude')
+const devilDude = document.querySelector('#devilDude');
 const devilDudeGif = document.querySelector('#devilDudeGif');
-const devilDudeHealth = document.querySelector('#devilDudeHealth');
 const flubber = document.querySelector('#flubber')
 const flubberGif = document.querySelector('#flubberGif');
-const flubberHealth = document.querySelector('#flubberHealth');
 const p1Health = document.querySelector("#p1Health");
 const p2Health = document.querySelector("#p2Health");
 
@@ -55,6 +60,97 @@ const flubberButton = document.querySelector('#flubberButton')
 const fightButtons = document.querySelector('#fightButtons')
 const p1Attacks = document.querySelector('#p1Attacks')
 const p2Attacks = document.querySelector('#p2Attacks')
+
+damageButtonFinder = (e) => {
+    if(e.target !== fightButtons){
+        console.log(e.target.className, e.target.dataset.probability)
+        if(e.target.className === 'P1'){
+            attackGif(p1Character.fighter);
+            if (p1Character.damageDealer(e.target.dataset.probability, e.target.dataset.damage, p2Character) === true){
+                console.log(p2Character.health)
+                takeDamageGif(p2Character.fighter)
+                updateHealth(p2Health, p2Character);
+                }
+                else if (p1Character.damageDealer(e.target.dataset.probability, e.target.dataset.damage, p2Character) === false){
+                    alert('Your attack missed!')
+                }
+        }
+        else if(e.target.className === 'P2'){
+            attackGif(p2Character.fighter);
+            if (p2Character.damageDealer(e.target.dataset.probability, e.target.dataset.damage, p1Character) === true){
+                takeDamageGif(p1Character.fighter)
+                console.log(p1Character.health)
+                updateHealth(p1Health, p1Character)
+            }
+            else if (p2Character.damageDealer(e.target.dataset.probability, e.target.dataset.damage, p1Character) === false){
+                alert('Your attack missed!')
+            }
+        }
+        
+    }
+}
+
+defaultGif = (name) => {
+    console.log(name)
+    if (name === 'boxBoi'){
+        boxBoiGif.src = 'spritesheets/boxBoiStand.gif'
+    }
+    else if (name === 'devilDude'){
+        devilDudeGif.src ='spritesheets/devilDude-Stand.gif'
+    }
+    else if (name === 'flubber'){
+        console.log('flubber is standing')
+    }
+}
+attackGif = (name) => {
+    console.log(name)
+    if (name === 'boxBoi'){
+        boxBoiGif.src = 'spritesheets/boxBoi-Attack.gif'
+        setTimeout(() => {defaultGif('boxBoi')} , 3000)
+    }
+    else if (name === 'devilDude'){
+        devilDudeGif.src ='spritesheets/devilDude-Attack.gif'
+        setTimeout(() => {defaultGif('devilDude')} , 3000)
+    }
+    else if (name === 'flubber'){
+        console.log('flubber attack')
+    }
+}
+takeDamageGif = (name) => {
+    if (name === 'boxBoi'){
+        boxBoiGif.src = 'spritesheets/boxBoi-damage.gif'
+        setTimeout(() => {defaultGif('boxBoi')} , 3000)
+    }
+    else if (name === 'devilDude'){
+        devilDudeGif.src ='spritesheets/devilDude-Damage.gif'
+        setTimeout(() => {defaultGif('devilDude')} , 3000)
+    }
+    else if (name === 'flubber'){
+        console.log('flubber got hurt')
+    }
+}
+deathGif = (name) => {
+    if (name === 'boxBoi'){
+        boxBoiGif.src = 'spritesheets/boxBoi-death.gif'
+    }
+    else if (name === 'devilDude'){
+        devilDudeGif.src ='spritesheets/devilDude-Death.gif'
+    }
+    else if (name === 'flubber'){
+        console.log('flubber died')
+    }
+}
+winGif = (name) => {
+    if (name === 'boxBoi'){
+        boxBoiGif.src = 'spritesheets/boxBoi-win.gif'
+    }
+    else if (name === 'devilDude'){
+        devilDudeGif.src ='spritesheets/devilDude-win.gif'
+    }
+    else if (name === 'flubber'){
+        console.log('flubber won')
+    }
+}
 
 highlightSelection = (e) => {
     if(e.target !== selectPlayer){
@@ -90,13 +186,8 @@ highlightSelection = (e) => {
         }
     }
 }
-updateHealth = (player) => {
-    if(player === p1Character){
-        p1Health.innerText = "Health: " + player.health; 
-    }
-    else if(player === p2Character){
-        p2Health.innerText = "Health: " + player.health;
-    }
+updateHealth = (element, player) => {
+    element.innerText = "Health: " + player.health;
 }
 choiceChecker = () => {
     // console.log(`P1 Button's 'chosen' dataset: ${p1Button.dataset.chosen} \n P2 Button's 'chosen' dataset: ${p2Button.dataset.chosen} `)
@@ -108,8 +199,8 @@ choiceChecker = () => {
         p1Attacks.setAttribute('class', 'moveList')
         p2Attacks.setAttribute('class', 'moveList')
         removeUnpicked();
-        updateHealth(p1Character);
-        updateHealth(p2Character);
+        updateHealth(p1Health, p1Character);
+        updateHealth(p2Health, p2Character);
     }
     else if(p1Button.dataset.chosen === 'false'){
         h2.innerText = "Now Select Player 1"
@@ -133,7 +224,7 @@ removeUnpicked = () => {
     }
 }
 
-objectMaker = (e) => {
+characterToObject = (e) => {
     if(e.target !== buttonContainer){
         if(p1Button.dataset.toggle === 'on'){
             //target name for object
@@ -203,4 +294,6 @@ objectMaker = (e) => {
 
 selectPlayer.addEventListener('click', highlightSelection)
 
-buttonContainer.addEventListener('click', objectMaker)
+buttonContainer.addEventListener('click', characterToObject)
+
+fightButtons.addEventListener('click', damageButtonFinder)
