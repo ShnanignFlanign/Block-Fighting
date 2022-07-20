@@ -20,6 +20,13 @@ body {
     justify-content: space-around;
 }
 
+.p2Character {
+    -webkit-transform: scaleX(-1);
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    transform: scaleX(-1);
+}
+
 #reverseCharacters {
     background: #b7b7b7;
     color: #333;

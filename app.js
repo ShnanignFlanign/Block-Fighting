@@ -18,7 +18,6 @@ class Character {
     }
     damageDealer (probability, damage, opponent) {
         let temp = Math.floor(Math.random() * 1000)
-        console.log(temp, probability)
         if(temp%probability === 0){
             opponent.loseHealth(damage)
             return true;
@@ -56,40 +55,80 @@ const boxBoiButton = document.querySelector('#boxBoiButton')
 const devilDudeButton = document.querySelector('#devilDudeButton')
 const flubberButton = document.querySelector('#flubberButton')
 
-// character fight buttons
+// player fight button divs
 const fightButtons = document.querySelector('#fightButtons')
 const p1Attacks = document.querySelector('#p1Attacks')
 const p2Attacks = document.querySelector('#p2Attacks')
+//individual buttons
+const p1Low = document.querySelector("#p1Low")
+const p1Mid = document.querySelector("#p1Mid")
+const p1High = document.querySelector("#p1High")
+const p2Low = document.querySelector("#p2Low")
+const p2Mid = document.querySelector("#p2Mid")
+const p2High = document.querySelector("#p2High")
+// placed in array
+const p1Arr = [p1Low, p1Mid, p1High]
+const p2Arr = [p2Low, p2Mid, p2High]
 
 damageButtonFinder = (e) => {
     if(e.target !== fightButtons){
         console.log(e.target.className, e.target.dataset.probability)
         if(e.target.className === 'P1'){
             attackGif(p1Character.fighter);
+            for (element of p1Arr){
+                element.disabled = true;
+            }
+            setTimeout(() => {
+                for (element of p2Arr){
+                    element.disabled = false;
+                    }
+            }, 3500)
             if (p1Character.damageDealer(e.target.dataset.probability, e.target.dataset.damage, p2Character) === true){
-                console.log(p2Character.health)
-                takeDamageGif(p2Character.fighter)
-                updateHealth(p2Health, p2Character);
+                if(e.target.dataset.damage === '10'){
+                    h2.innerText = "Player 1's attack landed for " + e.target.dataset.damage + " damage!"
                 }
-                else if (p1Character.damageDealer(e.target.dataset.probability, e.target.dataset.damage, p2Character) === false){
-                    alert('Your attack missed!')
+                else{
+                    h2.innerText = "Player 1 landed a crushing blow of " + e.target.dataset.damage + " damage!"
+                }
+                takeDamageGif(p2Character.fighter);
+
+                }
+            else if (p1Character.damageDealer(e.target.dataset.probability, e.target.dataset.damage, p2Character) === false){
+                    h2.innerText = "Player 1's attack missed!"
                 }
         }
         else if(e.target.className === 'P2'){
             attackGif(p2Character.fighter);
+            setTimeout(() => {
+                    for (element of p1Arr){
+                    element.disabled = false;
+                    }
+            }, 3500)
+            for (element of p2Arr){
+                element.disabled = true;
+            }
             if (p2Character.damageDealer(e.target.dataset.probability, e.target.dataset.damage, p1Character) === true){
+                if(e.target.dataset.damage === '10'){
+                    h2.innerText = "Player 2's attack landed for " + e.target.dataset.damage + " damage!"
+                }
+                else{
+                    h2.innerText = "Player 2 landed a crushing blow of " + e.target.dataset.damage + " damage!"
+                }
+
                 takeDamageGif(p1Character.fighter)
                 console.log(p1Character.health)
-                updateHealth(p1Health, p1Character)
             }
             else if (p2Character.damageDealer(e.target.dataset.probability, e.target.dataset.damage, p1Character) === false){
-                alert('Your attack missed!')
+                h2.innerText = "Player 2's attack missed!"
             }
         }
-        
+        updateHealth(p1Health, p1Character);
+        updateHealth(p2Health, p2Character);
     }
 }
 
+
+//gif changers
 defaultGif = (name) => {
     console.log(name)
     if (name === 'boxBoi'){
@@ -161,7 +200,7 @@ highlightSelection = (e) => {
             boxBoiButton.setAttribute('class', 'visible'); 
             devilDudeButton.setAttribute('class', 'visible');
             flubberButton.setAttribute('class', 'visible');
-            h2.innerText = "Now Choose Your Character.";
+            h2.innerText = "Choose Your Character.";
             if(e.target.id === 'p1'){
                 p2Button.disabled = true;
             }
@@ -190,23 +229,45 @@ updateHealth = (element, player) => {
     element.innerText = "Health: " + player.health;
 }
 choiceChecker = () => {
-    // console.log(`P1 Button's 'chosen' dataset: ${p1Button.dataset.chosen} \n P2 Button's 'chosen' dataset: ${p2Button.dataset.chosen} `)
     if(p1Button.dataset.chosen === 'true' && p2Button.dataset.chosen === 'true'){
         p1Button.setAttribute('class', 'hidden');
         p2Button.setAttribute('class', 'hidden');
-        h2.innerText = "Time to Fight!";
-        fightButtons.setAttribute('class', 'fightTime')
-        p1Attacks.setAttribute('class', 'moveList')
-        p2Attacks.setAttribute('class', 'moveList')
-        removeUnpicked();
-        updateHealth(p1Health, p1Character);
-        updateHealth(p2Health, p2Character);
+        setTimeout(() => {
+            h2.innerText = "Time to Fight!";
+            removeUnpicked();
+            updateHealth(p1Health, p1Character);
+            updateHealth(p2Health, p2Character);
+            for (element of p1Arr){
+                element.disabled = true;
+            }
+            for (element of p2Arr){
+                element.disabled = true;
+            }
+            setTimeout(() => {
+                h2.innerText = "Ready?"
+                setTimeout(() => {
+                    h2.innerText = "Go!"
+                    for (element of p1Arr){
+                        element.disabled = false;
+                    }
+                }, 2000)
+            }, 3500)  
+        }, 1500)
+        setTimeout(() => {
+            fightButtons.setAttribute('class', 'fightTime');
+            p1Attacks.setAttribute('class', 'moveList');
+            p2Attacks.setAttribute('class', 'moveList');
+        }, 7000)
     }
     else if(p1Button.dataset.chosen === 'false'){
-        h2.innerText = "Now Select Player 1"
+        setTimeout(() => {
+            h2.innerText = "Select Player 1"
+        }, 1500)
     }
     else if(p2Button.dataset.chosen === 'false'){
-        h2.innerText = "Now Select Player 2"
+        setTimeout(() => {
+            h2.innerText = "Select Player 2"
+        }, 1500)
     }
 }
 removeUnpicked = () => {
@@ -234,7 +295,7 @@ characterToObject = (e) => {
             p1Button.disabled = true;
             p2Button.disabled = false;
             e.target.disabled = true;
-            alert('Player 1 has chosen ' + e.target.innerText);
+            h2.innerText = "Player 1 has chosen " + e.target.innerText;
             e.target.innerText = "Locked";
             p1Button.dataset.toggle = 'off';
             if(e.target.dataset.name === 'boxBoi'){
@@ -258,19 +319,22 @@ characterToObject = (e) => {
             p2Button.disabled = true;
             p1Button.disabled = false;
             e.target.disabled = true;
-            alert('Player 2 has chosen ' + e.target.innerText);
+            h2.innerText = "Player 2 has chosen " + e.target.innerText;
             e.target.innerText = "Locked";
             p2Button.dataset.toggle = 'off';
             if(e.target.dataset.name === 'boxBoi'){
                 boxBoi.dataset.player = 'p2'
+                boxBoiGif.setAttribute('class', 'p2Character')
                 characterContainer.setAttribute('id', 'reverseCharacters');
                 buttonContainer.setAttribute('id', 'reverseContainer')
             }
             if(e.target.dataset.name === 'devilDude'){
                 devilDude.dataset.player = 'p2'
+                devilDudeGif.setAttribute('class', 'p2Character')
             }
             if(e.target.dataset.name === 'flubber'){
                 flubber.dataset.player = 'p2'
+                flubberGif.setAttribute('class', 'p2Character')
             }
         }
         if(e.target.dataset.name === 'boxBoi'){
