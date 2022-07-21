@@ -1,12 +1,4 @@
-console.log("My app.js file is attached.")
-
-
-//define character object class
-// --> character name 
-// --> health 
-// --> attack method 
-// --> drain health method 
-
+//CLASS DEFINITION
 class Character {
     constructor(player, fighter){
         this.player = player;
@@ -15,19 +7,22 @@ class Character {
     }
     loseHealth (value) {
         this.health = this.health - value;
+        if(this.health < 0){
+            this.health = 0;
+        }
     }
     damageDealer (probability, damage, opponent) {
         let temp = Math.floor(Math.random() * 1000)
-        if(temp%probability === 0){
+        console.log(temp)
+        if(temp <= probability){
             opponent.loseHealth(damage)
             return true;
         }
-        else{
+        else {
             return false;
         }
     }
-    //this is rough draft, might need to add more stuff
-}
+} // end class character
 
 const p1Character = new Character('p1','')
 const p2Character = new Character('p2', '')
@@ -55,6 +50,12 @@ const boxBoiButton = document.querySelector('#boxBoiButton')
 const devilDudeButton = document.querySelector('#devilDudeButton')
 const flubberButton = document.querySelector('#flubberButton')
 
+//replay buttons
+const restartButtonBlock = document.querySelector('#restartButtonBlock')
+const restartButtons = document.querySelector('#restartButtons')
+const restartConfirm = document.querySelector('#yes')
+const restartDeny = document.querySelector('#no')
+
 // player fight button divs
 const fightButtons = document.querySelector('#fightButtons')
 const p1Attacks = document.querySelector('#p1Attacks')
@@ -70,65 +71,7 @@ const p2High = document.querySelector("#p2High")
 const p1Arr = [p1Low, p1Mid, p1High]
 const p2Arr = [p2Low, p2Mid, p2High]
 
-damageButtonFinder = (e) => {
-    if(e.target !== fightButtons){
-        console.log(e.target.className, e.target.dataset.probability)
-        if(e.target.className === 'P1'){
-            attackGif(p1Character.fighter);
-            for (element of p1Arr){
-                element.disabled = true;
-            }
-            setTimeout(() => {
-                for (element of p2Arr){
-                    element.disabled = false;
-                    }
-            }, 3500)
-            if (p1Character.damageDealer(e.target.dataset.probability, e.target.dataset.damage, p2Character) === true){
-                if(e.target.dataset.damage === '10'){
-                    h2.innerText = "Player 1's attack landed for " + e.target.dataset.damage + " damage!"
-                }
-                else{
-                    h2.innerText = "Player 1 landed a crushing blow of " + e.target.dataset.damage + " damage!"
-                }
-                takeDamageGif(p2Character.fighter);
-
-                }
-            else if (p1Character.damageDealer(e.target.dataset.probability, e.target.dataset.damage, p2Character) === false){
-                    h2.innerText = "Player 1's attack missed!"
-                }
-        }
-        else if(e.target.className === 'P2'){
-            attackGif(p2Character.fighter);
-            setTimeout(() => {
-                    for (element of p1Arr){
-                    element.disabled = false;
-                    }
-            }, 3500)
-            for (element of p2Arr){
-                element.disabled = true;
-            }
-            if (p2Character.damageDealer(e.target.dataset.probability, e.target.dataset.damage, p1Character) === true){
-                if(e.target.dataset.damage === '10'){
-                    h2.innerText = "Player 2's attack landed for " + e.target.dataset.damage + " damage!"
-                }
-                else{
-                    h2.innerText = "Player 2 landed a crushing blow of " + e.target.dataset.damage + " damage!"
-                }
-
-                takeDamageGif(p1Character.fighter)
-                console.log(p1Character.health)
-            }
-            else if (p2Character.damageDealer(e.target.dataset.probability, e.target.dataset.damage, p1Character) === false){
-                h2.innerText = "Player 2's attack missed!"
-            }
-        }
-        updateHealth(p1Health, p1Character);
-        updateHealth(p2Health, p2Character);
-    }
-}
-
-
-//gif changers
+//gif changer functions
 defaultGif = (name) => {
     console.log(name)
     if (name === 'boxBoi'){
@@ -145,11 +88,11 @@ attackGif = (name) => {
     console.log(name)
     if (name === 'boxBoi'){
         boxBoiGif.src = 'spritesheets/boxBoi-Attack.gif'
-        setTimeout(() => {defaultGif('boxBoi')} , 3000)
+        setTimeout(() => {defaultGif('boxBoi')} , 2000)
     }
     else if (name === 'devilDude'){
         devilDudeGif.src ='spritesheets/devilDude-Attack.gif'
-        setTimeout(() => {defaultGif('devilDude')} , 3000)
+        setTimeout(() => {defaultGif('devilDude')} , 2000)
     }
     else if (name === 'flubber'){
         console.log('flubber attack')
@@ -158,11 +101,11 @@ attackGif = (name) => {
 takeDamageGif = (name) => {
     if (name === 'boxBoi'){
         boxBoiGif.src = 'spritesheets/boxBoi-damage.gif'
-        setTimeout(() => {defaultGif('boxBoi')} , 3000)
+        setTimeout(() => {defaultGif('boxBoi')} , 2000)
     }
     else if (name === 'devilDude'){
         devilDudeGif.src ='spritesheets/devilDude-Damage.gif'
-        setTimeout(() => {defaultGif('devilDude')} , 3000)
+        setTimeout(() => {defaultGif('devilDude')} , 2000)
     }
     else if (name === 'flubber'){
         console.log('flubber got hurt')
@@ -188,6 +131,152 @@ winGif = (name) => {
     }
     else if (name === 'flubber'){
         console.log('flubber won')
+    }
+}
+//END GIF FUNCTIONS
+
+//win condition listener
+healthListener = (objName, element, winner, winnerElement) => {
+    if(objName.health <= 0){
+        setTimeout(() => {
+            element.innerText = "K.0"
+            winnerElement.innerText = "Winner!"
+            deathGif(objName.fighter)
+            h2.innerText = winner.fighter + " Wins!"
+            winGif(winner.fighter)
+            fightButtons.setAttribute('class', 'hidden');
+            restartButtonBlock.setAttribute('class', 'restartWindow')
+            restartButtons.setAttribute('class', 'moveList')
+        }, 2000)
+    }
+}
+
+updateHealth = (element, player) => {
+    element.innerText = "Health: " + player.health;
+}
+
+choiceChecker = () => {
+    if(p1Button.dataset.chosen === 'true' && p2Button.dataset.chosen === 'true'){
+        p1Button.setAttribute('class', 'hidden');
+        p2Button.setAttribute('class', 'hidden');
+        setTimeout(() => {
+            h2.innerText = "Time to Fight!";
+            removeUnpicked();
+            updateHealth(p1Health, p1Character);
+            updateHealth(p2Health, p2Character);
+            for (element of p1Arr){
+                element.disabled = true;
+            }
+            for (element of p2Arr){
+                element.disabled = true;
+            }
+            setTimeout(() => {
+                h2.innerText = "Ready?"
+                setTimeout(() => {
+                    h2.innerText = "Go!"
+                    for (element of p1Arr){
+                        element.disabled = false;
+                    }
+                }, 2000)
+            }, 2000)  
+        }, 1500)
+        setTimeout(() => {
+            fightButtons.setAttribute('class', 'fightTime');
+            p1Attacks.setAttribute('class', 'moveList');
+            p2Attacks.setAttribute('class', 'moveList');
+        }, 6000)
+    }
+    else if(p1Button.dataset.chosen === 'false'){
+        setTimeout(() => {
+            h2.innerText = "Select Player 1"
+        }, 1500)
+    }
+    else if(p2Button.dataset.chosen === 'false'){
+        setTimeout(() => {
+            h2.innerText = "Select Player 2"
+        }, 1500)
+    }
+ } // END CHOICE CHECKER
+
+removeUnpicked = () => {
+    if(boxBoi.dataset.chosen === 'false'){
+        console.log('should remove boxBoi')
+        boxBoi.setAttribute('class', 'hidden');
+    }
+    else if(devilDude.dataset.chosen === 'false'){
+        console.log('should remove devilDude')
+        devilDude.setAttribute('class', 'hidden');
+    }
+    else if(flubber.dataset.chosen === 'false'){
+        console.log('should remove flubber')
+        flubber.setAttribute('class', 'hidden');
+    }
+}
+
+//EVENT LISTENER CALLBACK FUNCTIONS
+damageButtonFinder = (e) => {
+    if(e.target !== fightButtons){
+        console.log(e.target.className, e.target.dataset.probability)
+        if(e.target.className === 'P1'){
+            attackGif(p1Character.fighter);
+            for (element of p1Arr){
+                element.disabled = true;
+            }
+            setTimeout(() => {
+                for (element of p2Arr){
+                    element.disabled = false;
+                    }
+            }, 2000)
+            if (p1Character.damageDealer(e.target.dataset.probability, e.target.dataset.damage, p2Character) === true){
+                if(e.target.dataset.damage === '10'){
+                    h2.innerText = "Player 1's attack landed for " + e.target.dataset.damage + " damage!"
+                }
+                else{
+                    h2.innerText = "Player 1 landed a crushing blow of " + e.target.dataset.damage + " damage!"
+                }
+                takeDamageGif(p2Character.fighter);
+                healthListener(p2Character, p2Health, p1Character, p1Health)
+            }
+              else{
+                    h2.innerText = "Player 1's attack missed!"
+                }
+        }
+        else if(e.target.className === 'P2'){
+            attackGif(p2Character.fighter);
+            setTimeout(() => {
+                    for (element of p1Arr){
+                    element.disabled = false;
+                    }
+            }, 2000)
+            for (element of p2Arr){
+                element.disabled = true;
+            }
+            if (p2Character.damageDealer(e.target.dataset.probability, e.target.dataset.damage, p1Character) === true){
+                if(e.target.dataset.damage === '10'){
+                    h2.innerText = "Player 2's attack landed for " + e.target.dataset.damage + " damage!"
+                }
+                else{
+                    h2.innerText = "Player 2 landed a crushing blow of " + e.target.dataset.damage + " damage!"
+                }
+                takeDamageGif(p1Character.fighter)
+                healthListener(p1Character, p1Health, p2Character, p2Health)
+            }
+            else{
+                h2.innerText = "Player 2's attack missed!"
+            }
+        }
+        updateHealth(p1Health, p1Character);
+        updateHealth(p2Health, p2Character);
+    }
+} // END DAMAGEBUTTONFINDER(E)
+
+restartButtonListener = (e) => {
+    if(e.target !== restartButtonBlock){
+        if(e.target.id === 'no')
+        window.close()
+    }
+    else if(e.target.id === 'yes'){
+        window.location.reload()
     }
 }
 
@@ -224,66 +313,7 @@ highlightSelection = (e) => {
             }
         }
     }
-}
-updateHealth = (element, player) => {
-    element.innerText = "Health: " + player.health;
-}
-choiceChecker = () => {
-    if(p1Button.dataset.chosen === 'true' && p2Button.dataset.chosen === 'true'){
-        p1Button.setAttribute('class', 'hidden');
-        p2Button.setAttribute('class', 'hidden');
-        setTimeout(() => {
-            h2.innerText = "Time to Fight!";
-            removeUnpicked();
-            updateHealth(p1Health, p1Character);
-            updateHealth(p2Health, p2Character);
-            for (element of p1Arr){
-                element.disabled = true;
-            }
-            for (element of p2Arr){
-                element.disabled = true;
-            }
-            setTimeout(() => {
-                h2.innerText = "Ready?"
-                setTimeout(() => {
-                    h2.innerText = "Go!"
-                    for (element of p1Arr){
-                        element.disabled = false;
-                    }
-                }, 2000)
-            }, 3500)  
-        }, 1500)
-        setTimeout(() => {
-            fightButtons.setAttribute('class', 'fightTime');
-            p1Attacks.setAttribute('class', 'moveList');
-            p2Attacks.setAttribute('class', 'moveList');
-        }, 7000)
-    }
-    else if(p1Button.dataset.chosen === 'false'){
-        setTimeout(() => {
-            h2.innerText = "Select Player 1"
-        }, 1500)
-    }
-    else if(p2Button.dataset.chosen === 'false'){
-        setTimeout(() => {
-            h2.innerText = "Select Player 2"
-        }, 1500)
-    }
-}
-removeUnpicked = () => {
-    if(boxBoi.dataset.chosen === 'false'){
-        console.log('should remove boxBoi')
-        boxBoi.setAttribute('class', 'hidden');
-    }
-    else if(devilDude.dataset.chosen === 'false'){
-        console.log('should remove devilDude')
-        devilDude.setAttribute('class', 'hidden');
-    }
-    else if(flubber.dataset.chosen === 'false'){
-        console.log('should remove flubber')
-        flubber.setAttribute('class', 'hidden');
-    }
-}
+} //END HIGHLIGHT SELECTION
 
 characterToObject = (e) => {
     if(e.target !== buttonContainer){
@@ -351,13 +381,14 @@ characterToObject = (e) => {
         flubberButton.setAttribute('class', 'hidden');
         choiceChecker();
     }
-}
+} // END CHARACTER TO OBJECT
 
-//need 3 different attack buttons for each player
-//need functions for damage at each button
 
+//LISTENERS
 selectPlayer.addEventListener('click', highlightSelection)
 
 buttonContainer.addEventListener('click', characterToObject)
 
 fightButtons.addEventListener('click', damageButtonFinder)
+
+restartButtonBlock.addEventListener('click', restartButtonListener)

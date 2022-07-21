@@ -75,6 +75,17 @@ img {
     border-radius: 5px;
 }
 
+.restartWindow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #b7b7b7;
+    color: #333;
+    border-radius: 5px;
+}
+
+
 .moveList {
     display: flex;
     flex-direction: column;
