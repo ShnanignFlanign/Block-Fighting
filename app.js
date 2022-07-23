@@ -81,7 +81,7 @@ defaultGif = (name) => {
         devilDudeGif.src ='spritesheets/devilDude-Stand.gif'
     }
     else if (name === 'flubber'){
-        console.log('flubber is standing')
+        flubberGif.src = 'spritesheets/flubber-Stand.gif'
     }
 }
 attackGif = (name) => {
@@ -96,6 +96,7 @@ attackGif = (name) => {
     }
     else if (name === 'flubber'){
         flubberGif.src = 'spritesheets/flubber-Attack.gif'
+        setTimeout(() => {defaultGif('flubber')} , 2000)
     }
 }
 takeDamageGif = (name) => {
@@ -108,7 +109,8 @@ takeDamageGif = (name) => {
         setTimeout(() => {defaultGif('devilDude')} , 2000)
     }
     else if (name === 'flubber'){
-        console.log('flubber got hurt')
+        flubberGif.src = 'spritesheets/flubber-damage.gif'
+        setTimeout(() => {defaultGif('flubber')}, 2000)
     }
 }
 deathGif = (name) => {
@@ -119,7 +121,7 @@ deathGif = (name) => {
         devilDudeGif.src ='spritesheets/devilDude-Death.gif'
     }
     else if (name === 'flubber'){
-        console.log('flubber died')
+        flubberGif.src = 'spritesheets/flubber-death.gif'
     }
 }
 winGif = (name) => {
@@ -130,7 +132,7 @@ winGif = (name) => {
         devilDudeGif.src ='spritesheets/devilDude-win.gif'
     }
     else if (name === 'flubber'){
-        console.log('flubber won')
+        flubberGif.src = 'spritesheets/flubber-win.gif'
     }
 }
 //END GIF FUNCTIONS
