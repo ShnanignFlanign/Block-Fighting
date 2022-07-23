@@ -95,7 +95,7 @@ attackGif = (name) => {
         setTimeout(() => {defaultGif('devilDude')} , 2000)
     }
     else if (name === 'flubber'){
-        console.log('flubber attack')
+        flubberGif.src = 'spritesheets/flubber-Attack.gif'
     }
 }
 takeDamageGif = (name) => {
